@@ -9,5 +9,5 @@
 4. Run run_segmentation_tool.py after changing 'tp' variable to the timepoint you want to segment and 'ch' should be 1
 
 ## For timepoints after point of cellularization, use Cellpose for segmentation
-1. Obtain ch 0 images of the movie you will be tracking after the timepoint of cellularization
+1. Obtain ch 0 images of the movie you will be tracking after the timepoint of cellularization, put in a folder in 'tracked_embryos' directory titled 'test_cellpose'
 2. 
