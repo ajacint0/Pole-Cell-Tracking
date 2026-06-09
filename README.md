@@ -16,3 +16,14 @@
 2. Make a new directory called 'cellpose' in the same directory as 'test_cellpose' is in
 3. Edit cellpose_test.py and change the imwrite() function's path to point to 'cellpose' in your own directory
 4. Run cellpose_test.py
+
+## Code for building tracking graph
+1. Create directory called 'matches' in the same directory as 'cellpose' and 'test_cellpose' are in
+2. Open match_nucleus_tp_new.py
+   - Change 'movie' variable to the name of the movie you will be tracking
+   - Change 'split_tp' variable to the timepoint of cellularization
+   - In the 'timevect' variable, set the range to the first and last timepoint you will be tracking
+   - Change 'path_to_nuclear_segmentations' to the path where your saved segmentations from the tool are in
+   - Change 'path_to_membrane_segmentations' to the path where your 'cellpose' folder is
+   - Change 'path_for_saving_matches' to the path where your 'matches' folder is
+3. 
