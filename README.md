@@ -13,6 +13,6 @@
 
 ## For timepoints after point of cellularization, use Cellpose for segmentation
 1. Obtain cropped 16/8bit ch 0 images of the movie you will be tracking after the timepoint of cellularization, put in a folder in the movie name directory titled 'test_cellpose'
-2. Cake a new directory called 'cellpose' in the same directory as 'test_cellpose' is in
+2. Make a new directory called 'cellpose' in the same directory as 'test_cellpose' is in
 3. Edit cellpose_test.py and change the imwrite() function's path to point to 'cellpose' in your own directory
 4. Run cellpose_test.py
