@@ -4,12 +4,7 @@ import matplotlib
 matplotlib.rcParams["image.interpolation"] = 'none'
 import matplotlib.pyplot as plt
 from glob import glob
-#from tqdm import tqdm
 from tifffile import imread
-#from csbdeep.utils import Path, download_and_extract_zip_file
-#from stardist import relabel_image_stardist3D, Rays_GoldenSpiral, calculate_extents
-#from stardist import fill_label_holes, random_label_cmap
-#from stardist.matching import matching_dataset, matching
 from skimage.morphology import remove_small_objects
 from scipy.optimize import linear_sum_assignment
 from register_volumes import register_volumes
@@ -17,6 +12,7 @@ from register_volumes import register_volumes
 #source /mnt/home/ajacinto/venvs/my_env/bin/activate
 
 movie = '2025-12-17_160948'
+split_tp = 35
 
 def iou_matching(img1, img2, timeval):
 	iou_matrix = np.zeros((len(np.unique(img1)),len(np.unique(img2))))
@@ -59,7 +55,7 @@ def iou_matching(img1, img2, timeval):
 	np.save(path_for_saving_matches + str(timeval) + '_store_match_scores_new.npy', match_scores)
 
 
-split_tp = 35
+
 
 
 
