@@ -19,15 +19,19 @@
 4. Run cellpose_test.py
 
 ## Code for building tracking graph
+
 1. Create directory called 'matches' in the same directory as 'cellpose' and 'test_cellpose' are in
 2. Open match_nucleus_tp_new.py
+   - Change occurances of 'ajacinto' to your ceph username
    - Change 'movie' variable to the name of the movie you will be tracking
    - Change 'split_tp' variable to the timepoint of cellularization
    - In the 'timevect' variable, set the range to the first and last timepoint you will be tracking
    - Change 'path_to_nuclear_segmentations' to the path where your saved segmentations from the tool are in
    - Change 'path_to_membrane_segmentations' to the path where your 'cellpose' folder is
    - Change 'path_for_saving_matches' to the path where your 'matches' folder is
-3. Run match_nucleus_tp_new.py
-4. Open build_tree_from_match_files.py
-   - 'split_tp' variable to the timepoint of cellularization
+4. Run match_nucleus_tp_new.py
+5. Open build_tree_from_match_files.py
+   - Change occurances of 'ajacinto' to your ceph username
+   - Change 'split_tp' variable to the timepoint of cellularization
    - Change 'movie' variable to the name of the movie you will be tracking
+   - In the 'timevect' variable, set the range to the first and last timepoint you will be tracking
