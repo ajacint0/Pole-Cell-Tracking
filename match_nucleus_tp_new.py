@@ -13,11 +13,11 @@ from tifffile import imread
 from skimage.morphology import remove_small_objects
 from scipy.optimize import linear_sum_assignment
 from register_volumes import register_volumes
-
+import os
 #source /mnt/home/ajacinto/venvs/my_env/bin/activate
 
 movie = '2025-12-17_160948'
-
+user = 'ajacinto'
 def iou_matching(img1, img2, timeval):
 	iou_matrix = np.zeros((len(np.unique(img1)),len(np.unique(img2))))
 	counter = 0
@@ -55,9 +55,16 @@ def iou_matching(img1, img2, timeval):
 		print(M_again[1][i])
 		matches.append([int(M_again[0][i]), int(M_again[1][i])])
 		match_scores.append(iou_matrix[M[0][i]][M[1][i]])
-	np.save(path_for_saving_matches + str(timeval) + '_store_matches.npy', matches)
-	np.save(path_for_saving_matches + str(timeval) + '_store_match_scores.npy', match_scores)
+	np.save(path_for_saving_matches + str(timeval) + '_store_matches_new.npy', matches)
+	np.save(path_for_saving_matches + str(timeval) + '_store_match_scores_new.npy', match_scores)
 
+
+
+dirs = ['matches', 'csvs', 'transformations']
+for dir_ in dirs:
+	dir_path = f'/mnt/home/{user}/ceph/tracked_embryos/{movie}/{dir_}/'
+	if not os.path.isdir(dir_path):
+		os.makedirs(f'/mnt/home/{user}/ceph/tracked_embryos/{movie}/{dir_}/', exist_ok=True)
 
 split_tp = 35
 
@@ -65,10 +72,12 @@ split_tp = 35
 
 timevect = np.arange(75,114) #20,27
 
-path_to_nuclear_segmentations = f'/mnt/home/ajacinto/ceph/tracked_embryos/{movie}/gui_segs/tp_'
-path_to_membrane_segmentations = f'/mnt/home/ajacinto/ceph/tracked_embryos/{movie}/cellpose/cropped_raw_ch_0_tp_'
+path_to_nuclear_segmentations = f'/mnt/home/{user}/ceph/tracked_embryos/{movie}/gui_segs/tp_'
+path_to_membrane_segmentations = f'/mnt/home/{user}/ceph/tracked_embryos/{movie}/cellpose/cropped_raw_ch_0_tp_'
 
-path_for_saving_matches = f'/mnt/home/ajacinto/ceph/tracked_embryos/{movie}/matches/matches_'
+
+
+path_for_saving_matches = f'/mnt/home/{user}/ceph/tracked_embryos/{movie}/matches/matches_'
 
 suffix_for_path = '_ch_1_seg.tif'
 alt_suffix_for_path = '_ch_1_seg_missing.tif'
