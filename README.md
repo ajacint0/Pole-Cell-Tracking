@@ -10,28 +10,41 @@
 3. Put the ch 0 images in 'ch_0' folder in New_GUI, put ch 1 images in 'raw' folder in New_GUI
    - If you have model predictions, put those in 'seeds' folder in New_GUI
 4. Run run_segmentation_tool.py after changing 'tp' variable to the timepoint you want to segment and 'ch' should be 1
-5. Save your segmentations in the format tp_{timepoint}_ch_1_seg.tif
+5. Save your segmentations in the format tp_{timepoint}_ch_1_seg.tif and transfer them to  /mnt/home/{user}/ceph/tracked_embryos/{movie_name}/gui_segs/. Create gui_segs if the folder doesn't exist
 
 ## For timepoints after point of cellularization, use Cellpose for segmentation
-1. Obtain cropped 16/8bit ch 0 images of the movie you will be tracking after the timepoint of cellularization, put in a folder in the movie name directory titled 'test_cellpose'
+1. Obtain cropped 16/8bit ch 0 images of the movie you will be tracking and put in a folder in the movie name directory titled 'test_cellpose'
 2. Make a new directory called 'cellpose' in the same directory as 'test_cellpose' is in
 3. Edit cellpose_test.py and change the imwrite() function's path to point to 'cellpose' in your own directory
-4. Run cellpose_test.py
+4. Also change varriable 'split_tp' to the timepoint of cellularization
+5. Run cellpose_test.py
 
 ## Code for building tracking graph
 
-1. Create directory called 'matches' in the same directory as 'cellpose' and 'test_cellpose' are in
-2. Open match_nucleus_tp_new.py
-   - Change occurances of 'ajacinto' to your ceph username
+1. Open match_nucleus_tp_new.py
+   - Change 'user' variable to your ceph username
    - Change 'movie' variable to the name of the movie you will be tracking
    - Change 'split_tp' variable to the timepoint of cellularization
    - In the 'timevect' variable, set the range to the first and last timepoint you will be tracking
    - Change 'path_to_nuclear_segmentations' to the path where your saved segmentations from the tool are in
    - Change 'path_to_membrane_segmentations' to the path where your 'cellpose' folder is
    - Change 'path_for_saving_matches' to the path where your 'matches' folder is
-4. Run match_nucleus_tp_new.py
-5. Open build_tree_from_match_files.py
-   - Change occurances of 'ajacinto' to your ceph username
+2. Run match_nucleus_tp_new.py
+3. Open build_tree_from_match_files.py
+   - Change 'user' variable to your ceph username
    - Change 'split_tp' variable to the timepoint of cellularization
    - Change 'movie' variable to the name of the movie you will be tracking
    - In the 'timevect' variable, set the range to the first and last timepoint you will be tracking
+   - Change 'path_to_raw' to the path where your 'cellpose' folder is
+   - Change 'path_to_nuclear_segmentation' to the path where your saved segmentations from the tool are in
+4. Run build_tree_from_match_files.py
+  - This will create csv's which store the nodes and edges of the graph, edges denote connections between the same pole cells through time and nodes are each pole cell in a segmentation
+5. Open visualize_edges.py
+   - Change 'user' variable to your ceph username
+   - Change 'movie' variable to the name of the movie you will be tracking
+   - Set 'register' variable to True or False depending on if you want to view the early timepoint registered to the later one or not
+   - Change 'split_tp' variable to the timepoint of cellularization
+   - Changing the 'cutoff' variable to, for example, 20, will only highlight tracks that have at least 20 nodes connected through time
+   - Changing 'limit_graph' variable to True will show all potential cells and tracks
+   - Changing 'important_arr' variable to True will only show tracks that contain specific cells found at a certain timepoint, these cell labels are kept in a .npy file
+   - Changing 'text' variable to False will get rid of labels for the cells in the visualization, might make the visualization smoother
