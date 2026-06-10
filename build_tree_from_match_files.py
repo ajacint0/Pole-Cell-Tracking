@@ -23,8 +23,9 @@ def createCircularMask(shape, center, radius):
 
    return mask 
 
-path_for_saving_matches = '/mnt/home/ajacinto/ceph/tracked_embryos/2025-12-17_160948/test_cellpose/cropped_raw_ch_0_tp_'
-path_to_nuclear_seg = '/mnt/ceph/users/ajacinto/tracked_embryos/2025-12-17_160948/gui_segs/tp_'
+movie = '2025-12-17_160948'
+path_to_raw = f'/mnt/home/ajacinto/ceph/tracked_embryos/{movie}/test_cellpose/cropped_raw_ch_0_tp_'
+path_to_nuclear_seg = f'/mnt/ceph/users/ajacinto/tracked_embryos/{movie}/gui_segs/tp_'
 
 G = nx.Graph()
 for i in range(40,113):
@@ -33,8 +34,8 @@ for i in range(40,113):
 	
 
 
-	npy_pairs = np.load(f'/mnt/home/ajacinto/ceph/tracked_embryos/2025-12-17_160948/matches/matches_{i}_store_matches_new.npy')
-	npy_pairs_scores = np.load(f'/mnt/home/ajacinto/ceph/tracked_embryos/2025-12-17_160948/matches/matches_{i}_store_match_scores_new.npy')
+	npy_pairs = np.load(f'/mnt/home/ajacinto/ceph/tracked_embryos/{movie}/matches/matches_{i}_store_matches_new.npy')
+	npy_pairs_scores = np.load(f'/mnt/home/ajacinto/ceph/tracked_embryos/{movie}/matches/matches_{i}_store_match_scores_new.npy')
 
 
 	#if i == 30:
@@ -95,7 +96,7 @@ nuclear_volume_vect = np.zeros_like(G.nodes)
 nuclear_radius_val = 6
 for timeval in range(40, 113):
 	print('hi')
-	V_raw = tif.imread(f'{path_for_saving_matches}{timeval}.tif')
+	V_raw = tif.imread(f'{path_to_raw}{timeval}.tif')
 	try:
 		file_path_to_nuclear_seg = f'{path_to_nuclear_seg}{timeval}_ch_1_seg.tif'
 		Vnuclear_1 = tif.imread(file_path_to_nuclear_seg)
@@ -104,7 +105,7 @@ for timeval in range(40, 113):
 			file_path_to_nuclear_seg = f'{path_to_nuclear_seg}{timeval}_ch_1_seg_missing.tif'
 			Vnuclear_1 = tif.imread(file_path_to_nuclear_seg)
 		except:
-			file_path_to_nuclear_seg = f'/mnt/home/ajacinto/ceph/tracked_embryos/2025-12-17_160948/cellpose/cropped_raw_ch_0_tp_{timeval}_cp_masks.tif'
+			file_path_to_nuclear_seg = f'/mnt/home/ajacinto/ceph/tracked_embryos/{movie}/cellpose/cropped_raw_ch_0_tp_{timeval}_cp_masks.tif'
 			Vnuclear_1 = tif.imread(file_path_to_nuclear_seg)
 
 	unique_nuclear_labels = np.unique(Vnuclear_1)
@@ -149,14 +150,14 @@ for timeval in range(40, 113):
 				
 try:
 	in_graph_file = []
-	with open('/mnt/home/ajacinto/ceph/tracked_embryos/2025-12-17_160948/csvs/volume_graph.csv', newline='') as file:
+	with open(f'/mnt/home/ajacinto/ceph/tracked_embryos/{movie}/csvs/volume_graph.csv', newline='') as file:
 		csvfile = csv.reader(file)
 		for lines in csvfile:
 			#print(f'adding {lines} to it')
 			in_graph_file.append(lines)
 
 	print('huh')
-	with open('/mnt/home/ajacinto/ceph/tracked_embryos/2025-12-17_160948/csvs/volume_graph.csv', 'a') as csv_file:
+	with open(f'/mnt/home/ajacinto/ceph/tracked_embryos/{movie}/csvs/volume_graph.csv', 'a') as csv_file:
 		for i in range(0, len(list(G.nodes))):
 			
 			if [f'{list(G.nodes)[i]}',f'{nuclear_intensity_vect[i]}',f'{nuclear_volume_vect[i]}'] in in_graph_file:
@@ -179,7 +180,7 @@ except:
 	print('darn')
 	pass
 	
-	with open('/mnt/home/ajacinto/ceph/tracked_embryos/2025-12-17_160948/csvs/volume_graph.csv', 'w') as csv_file:
+	with open(f'/mnt/home/ajacinto/ceph/tracked_embryos/{movie}/csvs/volume_graph.csv', 'w') as csv_file:
 		for i in range(0, len(list(G.nodes))):
 			#print('ji')
 			csv_file.write(list(G.nodes)[i])
@@ -194,12 +195,12 @@ except:
 
 try:
 	in_edge_file = []
-	with open('/mnt/home/ajacinto/ceph/tracked_embryos/2025-12-17_160948/csvs/volume_edges.csv', newline='') as file:
+	with open(f'/mnt/home/ajacinto/ceph/tracked_embryos/{movie}/csvs/volume_edges.csv', newline='') as file:
 		csvfile = csv.reader(file)
 		for lines in csvfile:
 			print(f'adding {lines} to it')
 			in_edge_file.append(lines)
-	with open('/mnt/home/ajacinto/ceph/tracked_embryos/2025-12-17_160948/csvs/volume_edges.csv', 'a') as csv_file:
+	with open(f'/mnt/home/ajacinto/ceph/tracked_embryos/{movie}/csvs/volume_edges.csv', 'a') as csv_file:
 		for i in range(0, len(list(G.edges))):
 			
 			if [f'{list(G.edges)[i][0]}',f'{list(G.edges)[i][1]}'] in in_edge_file:
@@ -216,7 +217,7 @@ try:
 				#pass
 except:
 	print('doesnt exist')
-	with open('/mnt/home/ajacinto/ceph/tracked_embryos/2025-12-17_160948/csvs/volume_edges.csv', 'w') as csv_file:
+	with open(f'/mnt/home/ajacinto/ceph/tracked_embryos/{movie}/csvs/volume_edges.csv', 'w') as csv_file:
 		for i in range(0, len(list(G.edges))):
 			csv_file.write(list(G.edges)[i][0])
 			csv_file.write(',')
