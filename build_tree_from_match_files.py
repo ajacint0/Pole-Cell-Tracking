@@ -28,7 +28,7 @@ path_to_raw = f'/mnt/home/ajacinto/ceph/tracked_embryos/{movie}/test_cellpose/cr
 path_to_nuclear_seg = f'/mnt/ceph/users/ajacinto/tracked_embryos/{movie}/gui_segs/tp_'
 
 G = nx.Graph()
-for i in range(40,113):
+for i in timevect:
 
 	#if i == split_tp:
 	
@@ -94,7 +94,7 @@ for i in range(0, len(G.nodes)):
 nuclear_intensity_vect = np.zeros_like(G.nodes)
 nuclear_volume_vect = np.zeros_like(G.nodes)
 nuclear_radius_val = 6
-for timeval in range(40, 113):
+for timeval in timevect:
 	print('hi')
 	V_raw = tif.imread(f'{path_to_raw}{timeval}.tif')
 	try:
