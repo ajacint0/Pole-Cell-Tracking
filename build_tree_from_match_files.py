@@ -6,7 +6,7 @@ import csv
 
 
 split_tp = 35
-
+timevect = np.arange(40,113)
 
 def createCircularMask(shape, center, radius):
 
