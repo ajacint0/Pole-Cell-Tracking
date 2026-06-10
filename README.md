@@ -28,4 +28,4 @@
    - Change 'path_to_membrane_segmentations' to the path where your 'cellpose' folder is
    - Change 'path_for_saving_matches' to the path where your 'matches' folder is
 3. Run match_nucleus_tp_new.py
-4. Open build_tree_from_match_files.py
+4. Open build_tree_from_match_files.py 
