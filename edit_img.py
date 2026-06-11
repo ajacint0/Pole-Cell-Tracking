@@ -23,10 +23,13 @@ def createCircularMask(shape, center, radius):
 
 user = 'ajacinto'
 movie = '2025-12-17_160948'
+
+# Set only one of these to True
 split_nucleus = False
 combine_nuclei = False
 add_nucleus = False
 delete_nucleus = True
+
 tp = 40
 label = 34
 
@@ -35,14 +38,24 @@ label = 34
 img = tfl.imread(f'/mnt/home/{user}/ceph/tracked_embryos/{movie}/cellpose/cropped_raw_ch_0_tp_{tp}_cp_masks.tif')
 new_label1 = max(np.unique(img)) + 100
 if split_nucleus == True:
+
+	# Set only one of these to True
 	cut_z = False
 	cut_x = True
+	cut_y = False
+	
 	cutoffz = 218
+	cutoffy = 100
 	cutoffx = 222
 	if cut_z == True:
 		for z in range(0, img.shape[0]):
 			if z < cutoffz:
 				this_slice = img[z, :, :]
+				this_slice[np.where(this_slice == label)] = new_label1
+	elif cut_y == True:
+		for y in range(0, img.shape[1]):
+			if y < cutoffy:
+				this_slice = img[:, y, :]
 				this_slice[np.where(this_slice == label)] = new_label1
 	elif cut_x == True:
 		for x in range(0, img.shape[2]):
