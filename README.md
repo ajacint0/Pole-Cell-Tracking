@@ -48,3 +48,16 @@
    - Changing 'limit_graph' variable to True will show all potential cells and tracks
    - Changing 'important_arr' variable to True will only show tracks that contain specific cells found at a certain timepoint, these cell labels are kept in a .npy file
    - Changing 'text' variable to False will get rid of labels for the cells in the visualization, might make the visualization smoother
+   - Select timepoints to compare with the variables 'tp_early' and 'tp_late', they can be timepoints that are far apart such as 10 and 50
+
+## Tracking Nuclei
+1. Have tabs open for graph.csv, edges.csv, and the raw data + segmentations for the timepoints you are tracking on Fiji
+   - Run visualize_edges.py taking note of the variables you set previously
+   - An interactive window will pop up which will show centroids of pole cell nuclei differentiated by color.
+        - Red corresponds to nuclei from the earlier timepoint
+             - early nuclei which have lineages that trace back to nuclei in the 'important_arr' variable will be yellow
+        - Blue corresponds to nuclei from the later timepoint
+             - late nuclei which have lineages that trace back to nuclei in the 'important_arr' variable will be neon green
+        - What you will want to do if you have a .npy file of important nuclei is to connect yellow nuclei with no links to blue nuclei, thus turning the blue nuclei green upon reloading the visualization
+2. If you want to delete or make a connection between 2 nuclei, add an entry into edges.csv
+3. If you want to add a nucleus that isn't in the segmentation, 
