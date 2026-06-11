@@ -19,6 +19,9 @@ import os
 
 movie = '2025-12-17_160948'
 user = 'ajacinto'
+split_tp = 35
+timevect = np.arange(75,114)
+
 def iou_matching(img1, img2, timeval):
 	iou_matrix = np.zeros((len(np.unique(img1)),len(np.unique(img2))))
 	counter = 0
@@ -51,7 +54,6 @@ def iou_matching(img1, img2, timeval):
 		M2 = M[1][i]
 		M_again[0][i] = np.unique(img1)[M1]
 		M_again[1][i] = np.unique(img2)[M2]
-		print('here')
 		print(M_again[0][i])
 		print(M_again[1][i])
 		matches.append([int(M_again[0][i]), int(M_again[1][i])])
@@ -67,11 +69,7 @@ for dir_ in dirs:
 	if not os.path.isdir(dir_path):
 		os.makedirs(f'/mnt/home/{user}/ceph/tracked_embryos/{movie}/{dir_}/', exist_ok=True)
 
-split_tp = 35
-
-
-
-timevect = np.arange(75,114) #20,27
+ #20,27
 
 path_to_nuclear_segmentations = f'/mnt/home/{user}/ceph/tracked_embryos/{movie}/gui_segs/tp_'
 path_to_membrane_segmentations = f'/mnt/home/{user}/ceph/tracked_embryos/{movie}/cellpose/cropped_raw_ch_0_tp_'
