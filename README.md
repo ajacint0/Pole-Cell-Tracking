@@ -1,4 +1,8 @@
 # CAAX Embryo Tracking Protocol
+## Create virtual environment
+1. Create environment with command ```python3 -m venv name_of_virtual_environment```
+2. Activate the environment with ```source /mnt/home/YOUR_USERNAME/name_of_your_virtual_environment/bin/activate```
+3. Install the python packages with ```pip install -r requirements.txt```
 ## Prepare folder
 1. Create directory 'tracked_embryos' in your ceph
 2. In 'tracked_embryos', create another directory named after the movie you will be tracking
