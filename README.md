@@ -70,3 +70,6 @@
 7. To split a nucleus, open edit_img.py and set the variable 'split_nucleus' to True and also set either 'cut_z', 'cut_y', or 'cut_x' to True. Edit either 'cutoffz', 'cutoffy', or 'cutoffx' to the frame you would like the cut to pass through
 8. To combine nuclei, edit_img.py and set the variable combine_nuclei to True and set 'label' to the label the combined nuclei will have. Set 'false_label' to the label that will be merged into the other.
 9. If splitting or adding a nucleus, you will have to add the new label into graph.csv in order for it to show up in the visualization, the same goes for deleting and merging nuclei but instead of adding, you will delete the label from graph.csv
+
+<img width="1671" height="1670" alt="Screenshot from 2026-06-11 17-54-34" src="https://github.com/user-attachments/assets/56e1a32f-c30e-46bf-b4a5-4526420e219a" />
+
