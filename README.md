@@ -60,4 +60,9 @@
              - late nuclei which have lineages that trace back to nuclei in the 'important_arr' variable will be neon green
         - What you will want to do if you have a .npy file of important nuclei is to connect yellow nuclei with no links to blue nuclei, thus turning the blue nuclei green upon reloading the visualization
 2. If you want to delete or make a connection between 2 nuclei, add an entry into edges.csv
-3. If you want to add a nucleus that isn't in the segmentation, 
+3. If you want to delete a nucleus, you can delete the associated entry in graph.csv
+4. To add a nucleus to the segmentation, open edit_img.py and set the variable 'add_nucleus' to True enter and the zyx coordinates in the 'position' variable
+6. To delete a nucleus from the segmentation, open edit_img.py and set the variable 'delete_nucleus' to True set the 'label' variable to the desired label
+7. To split a nucleus, open edit_img.py and set the variable 'split_nucleus' to True and also set either 'cut_z', 'cut_y', or 'cut_x' to True. Edit either 'cutoffz', 'cutoffy', or 'cutoffx' to the frame you would like the cut to pass through
+8. To combine nuclei, edit_img.py and set the variable combine_nuclei to True and set 'label' to the label the combined nuclei will have. Set 'false_label' to the label that will be merged into the other.
+9. If splitting or adding a nucleus, you will have to add the new label into graph.csv in order for it to show up in the visualization, the same goes for deleting and merging nuclei but instead of adding, you will delete the label from graph.csv
