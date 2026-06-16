@@ -72,4 +72,4 @@
 1. There is a folder with example segmentations and raw data in '/mnt/ceph/users/ajacinto/tracked_embryos/test/'.
 2. Copy the 'test' folder into a directory called 'tracked_embryos' in your ceph
 3. Start the protocol at 'Code for building tracking graph'
-
+ADD HAYDEN ARRAY TO REPOSITORY
