@@ -174,7 +174,7 @@ except FileNotFoundError:
 #If true, the window that show's the graph will have the centroids registered (they were already registered when doing IOU calculations to make the initial edges)
 if register == True:
 	matrix = np.load(f'/mnt/home/{user}/ceph/tracked_embryos/{movie}/transformations/tp_{tp_early}_transformation.npy')
-	nuclear_seg_early = register_volumes(movie, tp_early, nuclear_seg_early, nuclear_seg_late, matrix)
+	nuclear_seg_early = register_volumes(user, movie, tp_early, nuclear_seg_early, nuclear_seg_late, matrix)
 
 props_early = regionprops(nuclear_seg_early)
 props_late = regionprops(nuclear_seg_late)
