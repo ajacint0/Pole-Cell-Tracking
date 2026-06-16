@@ -58,8 +58,8 @@ def iou_matching(img1, img2, timeval):
 		print(M_again[1][i])
 		matches.append([int(M_again[0][i]), int(M_again[1][i])])
 		match_scores.append(iou_matrix[M[0][i]][M[1][i]])
-	np.save(path_for_saving_matches + str(timeval) + '_store_matches_new.npy', matches)
-	np.save(path_for_saving_matches + str(timeval) + '_store_match_scores_new.npy', match_scores)
+	np.save(path_for_saving_matches + str(timeval) + '_store_matches.npy', matches)
+	np.save(path_for_saving_matches + str(timeval) + '_store_match_scores.npy', match_scores)
 
 
 
