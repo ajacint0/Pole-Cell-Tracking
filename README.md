@@ -73,3 +73,8 @@
 
 <img width="1671" height="1670" alt="Screenshot from 2026-06-11 17-54-34" src="https://github.com/user-attachments/assets/56e1a32f-c30e-46bf-b4a5-4526420e219a" />
 
+## Example Data
+1. There is a folder with example segmentations and raw data in '/mnt/ceph/users/ajacinto/tracked_embryos/test/'.
+2. Copy the 'test' folder into a directory called 'tracked_embryos' in your ceph
+3. Start the protocol at 'Code for building tracking graph'
+
