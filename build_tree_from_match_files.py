@@ -68,20 +68,9 @@ for i in timevect:
 		if int(node.split('_')[0]) == i:
 			node_count = node_count + 1
 	print(f'# of tp {i} nodes: {node_count}')
-#print(list(G.edges)[4])
-#print(list(G.edges)[4][0])
-#print(list(G.edges)[4][1])
-#print((G.nodes))
+
 time_vals_vect = np.zeros_like(G.nodes)
 labels_vals_vect = np.zeros_like(G.nodes)
-
-
-#p#os = nx.spring_layout(G)
-#nx.draw_networkx_nodes(G, pos, node_size = 700)
-#nx.draw_networkx_edges(G, pos, width=2)
-#n#x.draw_networkx_labels(G, pos, font_size=4, font_family='sans-serif')
-#plt.axis('off')
-#plt.show()
 
 
 for i in range(0, len(G.nodes)):
@@ -89,14 +78,11 @@ for i in range(0, len(G.nodes)):
 	time_label = nodename.split('_')
 	time_vals_vect[i] = int(time_label[0])
 	labels_vals_vect[i] = int(time_label[1])
-	#print(labels_vals_vect[i])
-	#print(list(G.nodes)[i])
-	#print(type(list(G.nodes)[i]))
+
 nuclear_intensity_vect = np.zeros_like(G.nodes)
 nuclear_volume_vect = np.zeros_like(G.nodes)
 nuclear_radius_val = 6
 for timeval in timevect:
-	print('hi')
 	V_raw = tif.imread(f'{path_to_raw}{timeval}.tif')
 	try:
 		file_path_to_nuclear_seg = f'{path_to_nuclear_seg}{timeval}_ch_1_seg.tif'
@@ -113,22 +99,21 @@ for timeval in timevect:
 
 	
 	unique_labels = [int(i.split('_')[1]) for i in list(G.nodes) if int(i.split('_')[0]) == timeval]
-	print('len')
-	#print(len(unique_labels))
+
 
 	for i in unique_labels:
-		print(i)
+
 		if i == 0:
 			continue
 		nucleus = np.where(Vnuclear_1 == i)
-		#print(nucleus[3])
+
 		assert len(nucleus[0]) != 0
 		try:
 			if timeval > 35:
 				findnodeval = list(G.nodes).index(f'{timeval:03}_{i:06}')
 			else:
 				findnodeval = list(G.nodes).index(f'{timeval:03}_{i:03}')
-			#print(findnodeval)
+
 		except:
 			continue
 
@@ -137,8 +122,7 @@ for timeval in timevect:
 		mean_X = int(np.mean(nucleus[2]))
 		
 		volume = np.sum(Vnuclear_1 == i)
-		if timeval == 82 and i == 189:
-			print(f'hi the volume for 189 is {volume}')
+
 
 		nuclear_volume_vect[findnodeval] = volume
 
@@ -157,7 +141,6 @@ try:
 			#print(f'adding {lines} to it')
 			in_graph_file.append(lines)
 
-	print('huh')
 	with open(f'/mnt/home/{user}/ceph/tracked_embryos/{movie}/csvs/volume_graph.csv', 'a') as csv_file:
 		for i in range(0, len(list(G.nodes))):
 			
