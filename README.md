@@ -30,9 +30,6 @@
    - Change 'movie' variable to the name of the movie you will be tracking
    - Change 'split_tp' variable to the timepoint of cellularization
    - In the 'timevect' variable, set the range to the first and last timepoint you will be tracking
-   - Change 'path_to_nuclear_segmentations' to the path where your saved segmentations from the tool are in
-   - Change 'path_to_membrane_segmentations' to the path where your 'cellpose' folder is
-   - Change 'path_for_saving_matches' to the path where your 'matches' folder is
 2. Run match_nucleus_tp_new.py
 3. Open build_tree_from_match_files.py
    - Change 'user' variable to your ceph username
