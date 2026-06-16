@@ -101,5 +101,5 @@ for timeval in timevect:
 		Xi = remove_small_objects(Xi, 5000)
 
 	print(f'tp: {timeval}')
-	Xi_transformed = register_volumes(movie, timeval, Xi, X1, np.eye(4))
+	Xi_transformed = register_volumes(user, movie, timeval, Xi, X1, np.eye(4))
 	iou_matching(Xi_transformed, X1, timeval)
