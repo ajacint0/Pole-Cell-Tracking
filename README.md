@@ -36,8 +36,6 @@
    - Change 'split_tp' variable to the timepoint of cellularization
    - Change 'movie' variable to the name of the movie you will be tracking
    - In the 'timevect' variable, set the range to the first and last timepoint you will be tracking
-   - Change 'path_to_raw' to the path where your 'cellpose' folder is
-   - Change 'path_to_nuclear_segmentation' to the path where your saved segmentations from the tool are in
 4. Run build_tree_from_match_files.py
   - This will create csv's which store the nodes and edges of the graph, edges denote connections between the same pole cells through time and nodes are each pole cell in a segmentation
 5. Open visualize_edges.py
