@@ -35,8 +35,8 @@ for i in timevect:
 	
 
 
-	npy_pairs = np.load(f'/mnt/home/{user}/ceph/tracked_embryos/{movie}/matches/matches_{i}_store_matches_new.npy')
-	npy_pairs_scores = np.load(f'/mnt/home/{user}/ceph/tracked_embryos/{movie}/matches/matches_{i}_store_match_scores_new.npy')
+	npy_pairs = np.load(f'/mnt/home/{user}/ceph/tracked_embryos/{movie}/matches/matches_{i}_store_matches.npy')
+	npy_pairs_scores = np.load(f'/mnt/home/{user}/ceph/tracked_embryos/{movie}/matches/matches_{i}_store_match_scores.npy')
 
 
 	#if i == 30:
