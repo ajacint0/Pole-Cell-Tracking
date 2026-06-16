@@ -18,7 +18,7 @@ import csv
 #matplotlib.use('TkAgg')
 
 
-def register_volumes(movie, source_tp, source, target, matrix):
+def register_volumes(user, movie, source_tp, source, target, matrix):
 	if np.array_equal(matrix, np.eye(4)):
 
 		source_segmentation = source
@@ -70,7 +70,7 @@ def register_volumes(movie, source_tp, source, target, matrix):
 			icp.set_target(target_input)
 			T_new = icp.align(source_input, init_T=np.eye(4))
 		T_new = (np.array(T_new, dtype=np.float64))
-		np.save(f'/mnt/home/ajacinto/ceph/tracked_embryos/{movie}/transformations/tp_{source_tp}_transformation.npy', T_new)
+		np.save(f'/mnt/home/{user}/ceph/tracked_embryos/{movie}/transformations/tp_{source_tp}_transformation.npy', T_new)
 	else:
 		T_new = matrix
 	#ones = np.ones((end_source.shape[0], 1))
