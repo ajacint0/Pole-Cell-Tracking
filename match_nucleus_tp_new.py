@@ -17,11 +17,10 @@ from register_volumes import register_volumes
 import os
 #source /mnt/home/ajacinto/venvs/my_env/bin/activate
 
-movie = '2025-12-17_160948'
+movie = '2025-07-09_142109'
 user = 'ajacinto'
-split_tp = 35
-timevect = np.arange(75,114)
-
+split_tp = 0
+timevect = np.arange(10,68)
 def iou_matching(img1, img2, timeval):
 	iou_matrix = np.zeros((len(np.unique(img1)),len(np.unique(img2))))
 	counter = 0
@@ -54,6 +53,7 @@ def iou_matching(img1, img2, timeval):
 		M2 = M[1][i]
 		M_again[0][i] = np.unique(img1)[M1]
 		M_again[1][i] = np.unique(img2)[M2]
+		print('here')
 		print(M_again[0][i])
 		print(M_again[1][i])
 		matches.append([int(M_again[0][i]), int(M_again[1][i])])
@@ -68,6 +68,10 @@ for dir_ in dirs:
 	dir_path = f'/mnt/home/{user}/ceph/tracked_embryos/{movie}/{dir_}/'
 	if not os.path.isdir(dir_path):
 		os.makedirs(f'/mnt/home/{user}/ceph/tracked_embryos/{movie}/{dir_}/', exist_ok=True)
+
+
+
+
 
  #20,27
 
@@ -101,5 +105,5 @@ for timeval in timevect:
 		Xi = remove_small_objects(Xi, 5000)
 
 	print(f'tp: {timeval}')
-	Xi_transformed = register_volumes(user, movie, timeval, Xi, X1, np.eye(4))
+	Xi_transformed = register_volumes(movie, timeval, Xi, X1, np.eye(4))
 	iou_matching(Xi_transformed, X1, timeval)
