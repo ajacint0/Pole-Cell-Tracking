@@ -1,7 +1,8 @@
 import matplotlib
 matplotlib.use('Qt5Agg')
+from matplotlib.backend_bases import MouseButton
 import matplotlib.pyplot as plt
-
+import mplcursors
 import networkx as nx
 from mpl_toolkits.mplot3d import axes3d
 import numpy as np
@@ -11,6 +12,8 @@ from skimage.measure import regionprops, label
 from skimage.morphology import remove_small_objects
 from trim_graph import trim_graph
 from register_volumes import register_volumes
+from mpl_toolkits.mplot3d import proj3d
+
 
 user = 'ajacinto'
 movie = '2025-12-17_160948'
@@ -28,15 +31,15 @@ text = True
 
 
 
-path_to_nuclear_seg = '/mnt/home/{user}/ceph/tracked_embryos/{movie}/gui_segs/tp_'
-path_to_membrane_seg = '/mnt/home/{user}/ceph/tracked_embryos/{movie}/cellpose/cropped_raw_ch_0_tp_'
+path_to_nuclear_seg = f'/mnt/home/{user}/ceph/tracked_embryos/{movie}/gui_segs/tp_'
+path_to_membrane_seg = f'/mnt/home/{user}/ceph/tracked_embryos/{movie}/cellpose/cropped_raw_ch_0_tp_'
 
 
 
 # Loads nuclei that will go in lineage tree
 if important_arr == True:
-	maybe_arr = np.load('/mnt/home/{user}/ceph/tracked_embryos/{movie}/important_nuclei/tp_35_maybe.npy')
-	for_sure_arr = np.load('/mnt/home/{user}/ceph/tracked_embryos/{movie}/important_nuclei/tp_35_for_sure.npy')
+	maybe_arr = np.load(f'/mnt/home/{user}/ceph/tracked_embryos/{movie}/important_nuclei/tp_35_maybe.npy')
+	for_sure_arr = np.load(f'/mnt/home/{user}/ceph/tracked_embryos/{movie}/important_nuclei/tp_35_for_sure.npy')
 	
 	arr = []
 	for i in maybe_arr:
@@ -46,8 +49,8 @@ if important_arr == True:
 	print(arr)
 
 #Chooses which timepoints are shown on screen, can be far apart like tp_early=4, tp_late=30
-tp_early = 54
-tp_late = 55
+tp_early = 44
+tp_late = 45
 
 
 #split_tp is when I switch from manual segmentation to cellpose segmentation, with cellpose segmentations have thousands of labels, I need to change the naming convention(I should change this to all be 6 characters long, made more sense when manually writing onto csv)
@@ -66,7 +69,7 @@ end_edge = []
 
 
 #Adds nodes and edges to graph
-with open('/mnt/home/{user}/ceph/tracked_embryos/{movie}/csvs/volume_edges.csv', newline='') as file:
+with open(f'/mnt/home/{user}/ceph/tracked_embryos/{movie}/csvs/volume_edges.csv', newline='') as file:
 	csvfile = csv.reader(file)
 	data = list(csvfile)
 	for lines in data:
@@ -76,7 +79,7 @@ with open('/mnt/home/{user}/ceph/tracked_embryos/{movie}/csvs/volume_edges.csv',
 only_these_nuclei = []
 
 #Adds nodes with no edges
-with open('/mnt/home/{user}/ceph/tracked_embryos/{movie}/csvs/volume_graph.csv', newline='') as file:
+with open(f'/mnt/home/{user}/ceph/tracked_embryos/{movie}/csvs/volume_graph.csv', newline='') as file:
 		csvfile = csv.reader(file)
 		for lines in csvfile:
 			G.add_node(lines[0])
@@ -85,7 +88,7 @@ with open('/mnt/home/{user}/ceph/tracked_embryos/{movie}/csvs/volume_graph.csv',
 #If false, shows every segmentation that is large enough in size
 if limit_graph == False:
 
-	with open('/mnt/home/{user}/ceph/tracked_embryos/{movie}/csvs/volume_graph.csv', newline='') as file:
+	with open(f'/mnt/home/{user}/ceph/tracked_embryos/{movie}/csvs/volume_graph.csv', newline='') as file:
 		csvfile = csv.reader(file)
 		for lines in csvfile:
 			if f'{tp_early:03}' in (lines[0])[:3]:
@@ -98,7 +101,7 @@ if limit_graph == False:
 #Else, if using the npy file containing important nuclei, save them for highlighting with bright colors, if not using npy file, choose cutoff value, only highlights nuclei that have more connections in the lineage than the cutoff value
 else:
 
-	if hayden_arr == True:
+	if important_arr == True:
 		for node in arr:
 			#trim_graph tells the program which tracks to highlight based on the minimum number of nodes in each track
 			node_list, delete_list = trim_graph(0, node, data, [node], [], cutoff)
@@ -174,7 +177,7 @@ except FileNotFoundError:
 #If true, the window that show's the graph will have the centroids registered (they were already registered when doing IOU calculations to make the initial edges)
 if register == True:
 	matrix = np.load(f'/mnt/home/{user}/ceph/tracked_embryos/{movie}/transformations/tp_{tp_early}_transformation.npy')
-	nuclear_seg_early = register_volumes(user, movie, tp_early, nuclear_seg_early, nuclear_seg_late, matrix)
+	nuclear_seg_early = register_volumes(movie, tp_early, nuclear_seg_early, nuclear_seg_late, matrix)
 
 props_early = regionprops(nuclear_seg_early)
 props_late = regionprops(nuclear_seg_late)
@@ -193,6 +196,8 @@ color_late = []
 
 name_early = []
 name_late = []
+
+early_txt = []
 
 fig = plt.figure()
 ax = plt.axes(projection='3d')
@@ -214,18 +219,23 @@ for nucleus in props_early:
 			z_early.append(nucleus.centroid[0])
 			color_early.append('yellow')
 			name_early.append(f'{tp_early:03}_{nucleus.label:0{early_buffer}}')
-			if text == True:
-				ax.text(nucleus.centroid[2], nucleus.centroid[1], nucleus.centroid[0], f'{tp_early:03}_{nucleus.label:0{early_buffer}}')
+			
+			txt = ax.text(nucleus.centroid[2], nucleus.centroid[1], nucleus.centroid[0], f'{tp_early:03}_{nucleus.label:0{early_buffer}}')
+			txt.set_visible(False)
+			early_txt.append(txt)
+				
 		else:
 			x_early.append(nucleus.centroid[2])
 			y_early.append(nucleus.centroid[1])
 			z_early.append(nucleus.centroid[0])
 			color_early.append('red')
 			name_early.append(f'{tp_early:03}_{nucleus.label:0{early_buffer}}')
-			if text == True:
-				ax.text(nucleus.centroid[2], nucleus.centroid[1], nucleus.centroid[0], f'{tp_early:03}_{nucleus.label:0{early_buffer}}')
+			
+			txt = ax.text(nucleus.centroid[2], nucleus.centroid[1], nucleus.centroid[0], f'{tp_early:03}_{nucleus.label:0{early_buffer}}')
+			txt.set_visible(False)
+			early_txt.append(txt)
 
-ax.scatter(x_early,y_early,z_early, s=10, c=color_early, marker='o')
+sc_early = ax.scatter(x_early,y_early,z_early, s=10, c=color_early, marker='o')
 
 #gets nucleus centroid coords, assigns color, assigns text to nodes in graph for late timepoint
 
@@ -244,18 +254,24 @@ for nucleus in props_late:
 			z_late.append(nucleus.centroid[0])
 			color_late.append('lime')
 			name_late.append(f'{tp_late:03}_{nucleus.label:0{late_buffer}}')
-			if text == True:
-				ax.text(nucleus.centroid[2], nucleus.centroid[1], nucleus.centroid[0], f'{tp_late:03}_{nucleus.label:0{late_buffer}}')
+			
+			txt = ax.text(nucleus.centroid[2], nucleus.centroid[1], nucleus.centroid[0], f'{tp_late:03}_{nucleus.label:0{late_buffer}}')
+			txt.set_visible(False)
+			early_txt.append(txt)
+				#ax.text(nucleus.centroid[2], nucleus.centroid[1], nucleus.centroid[0], f'{tp_late:03}_{nucleus.label:0{late_buffer}}')
 		else:
 			x_late.append(nucleus.centroid[2])
 			y_late.append(nucleus.centroid[1])
 			z_late.append(nucleus.centroid[0])
 			color_late.append('blue')
 			name_late.append(f'{tp_late:03}_{nucleus.label:0{late_buffer}}')
-			if text == True:
-				ax.text(nucleus.centroid[2], nucleus.centroid[1], nucleus.centroid[0], f'{tp_late:03}_{nucleus.label:0{late_buffer}}')
+				
+			txt = ax.text(nucleus.centroid[2], nucleus.centroid[1], nucleus.centroid[0], f'{tp_late:03}_{nucleus.label:0{late_buffer}}')
+			txt.set_visible(False)
+			early_txt.append(txt)
+				#ax.text(nucleus.centroid[2], nucleus.centroid[1], nucleus.centroid[0], f'{tp_late:03}_{nucleus.label:0{late_buffer}}')
 
-ax.scatter(x_late,y_late,z_late, s=10, c=color_late, marker='o')
+sc_late = ax.scatter(x_late,y_late,z_late, s=10, c=color_late, marker='o')
 
 
 #finds a path between the early and late nuclei even if they are multiple timepoints apart
@@ -293,8 +309,70 @@ fig.patch.set_facecolor('black')
 ax.set_xticks(range(0,(nuclear_seg_late.shape[2]), 100))
 ax.set_yticks(range(0,(nuclear_seg_late.shape[1]), 30))
 ax.set_zticks(range(0,(nuclear_seg_late.shape[0]), 100))
-plt.show()
 
+sc_early.set_picker(1)
+
+sc_late.set_picker(1)
+last_text = None
+
+x_early.extend(x_late)
+y_early.extend(y_late)
+z_early.extend(z_late)
+
+visible = np.ones(len(x_early), dtype=bool)
+
+x_early = np.array(x_early)
+y_early = np.array(y_early)
+z_early = np.array(z_early)
+def on_click(event):
+	if event.button is MouseButton.RIGHT:
+		mouse = np.array([event.x, event.y])
+		dists = np.linalg.norm(projected - mouse, axis=1)
+		idx = np.argmin(dists)
+		#print('right click!')
+		#if dists[idx] < 5:
+			#print(idx)
+			#print(early_txt[idx].get_text())
+			#print(early_txt[idx].get_position())
+			
+			#print(visible.sum())
+			#visible[idx] = False
+			#print(visible.sum())
+			#sc_early._offsets3d = (x_early[visible], y_early[visible],z_early[visible])
+			#sc_early.set_color(color_early[visible])
+			#x_early[idx] = 0
+			#y_early[idx] = 0
+			#z_early[idx] = 0
+			#fig.canvas.draw_idle()
+
+def hover(event):
+	if event.inaxes!= ax:
+		for i in early_txt:
+			i.set_visible(False)
+	mouse = np.array([event.x, event.y])
+	dists = np.linalg.norm(projected - mouse, axis=1)
+	idx = np.argmin(dists)
+	
+	if dists[idx] < 5:
+		early_txt[idx].set_visible(True)
+	else:
+		for i in early_txt:
+			i.set_visible(False)
+	fig.canvas.draw_idle()
+
+fig.canvas.mpl_connect("motion_notify_event", hover)
+fig.canvas.mpl_connect("button_press_event", on_click)
+projected = None
+
+#print(x_early)
+def update_projection():
+	global projected
+	x2, y2, _ = proj3d.proj_transform(x_early,y_early,z_early,ax.get_proj())
+	projected = ax.transData.transform(np.column_stack([x2,y2]))
+	
+
+fig.canvas.mpl_connect('draw_event', lambda event: update_projection())
+plt.show()
 
 
 
