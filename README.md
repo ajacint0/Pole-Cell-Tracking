@@ -67,7 +67,12 @@
 9. If splitting or adding a nucleus, you will have to add the new label into graph.csv in order for it to show up in the visualization, the same goes for deleting and merging nuclei but instead of adding, you will delete the label from graph.csv
 
 <img width="1671" height="1670" alt="Screenshot from 2026-06-11 17-54-34" src="https://github.com/user-attachments/assets/56e1a32f-c30e-46bf-b4a5-4526420e219a" />
-
+## Visualizing Tree
+1. Open 'lineage_tree_new'
+2. Change 'user' variable to your ceph username
+3. Change 'movie' variable to the name of the movie you will be tracking
+4. In the 'timevect' variable, set the range to the first and last timepoint you will be tracking
+5. in the 'cuttoff' variable, enter the minimum number of nodes in a track to have it show up 
 ## Example Data
 1. There is a folder with example segmentations and raw data in '/mnt/ceph/users/ajacinto/tracked_embryos/test/'.
 2. Copy the 'test' folder into a directory called 'tracked_embryos' in your ceph
