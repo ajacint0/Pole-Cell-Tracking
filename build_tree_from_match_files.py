@@ -6,8 +6,8 @@ import csv
 import os
 
 user = 'ajacinto'
-split_tp = 35
-timevect = np.arange(40,113)
+split_tp = 0
+timevect = np.arange(1,55)
 
 def createCircularMask(shape, center, radius):
 
@@ -24,7 +24,7 @@ def createCircularMask(shape, center, radius):
 
    return mask 
 
-movie = '2025-12-17_160948'
+movie = '2025-07-09_142109'
 path_to_raw = f'/mnt/home/{user}/ceph/tracked_embryos/{movie}/test_cellpose/cropped_raw_ch_0_tp_'
 path_to_nuclear_seg = f'/mnt/ceph/users/{user}/tracked_embryos/{movie}/gui_segs/tp_'
 
@@ -68,9 +68,20 @@ for i in timevect:
 		if int(node.split('_')[0]) == i:
 			node_count = node_count + 1
 	print(f'# of tp {i} nodes: {node_count}')
-
+#print(list(G.edges)[4])
+#print(list(G.edges)[4][0])
+#print(list(G.edges)[4][1])
+#print((G.nodes))
 time_vals_vect = np.zeros_like(G.nodes)
 labels_vals_vect = np.zeros_like(G.nodes)
+
+
+#p#os = nx.spring_layout(G)
+#nx.draw_networkx_nodes(G, pos, node_size = 700)
+#nx.draw_networkx_edges(G, pos, width=2)
+#n#x.draw_networkx_labels(G, pos, font_size=4, font_family='sans-serif')
+#plt.axis('off')
+#plt.show()
 
 
 for i in range(0, len(G.nodes)):
@@ -78,11 +89,14 @@ for i in range(0, len(G.nodes)):
 	time_label = nodename.split('_')
 	time_vals_vect[i] = int(time_label[0])
 	labels_vals_vect[i] = int(time_label[1])
-
+	#print(labels_vals_vect[i])
+	#print(list(G.nodes)[i])
+	#print(type(list(G.nodes)[i]))
 nuclear_intensity_vect = np.zeros_like(G.nodes)
 nuclear_volume_vect = np.zeros_like(G.nodes)
 nuclear_radius_val = 6
 for timeval in timevect:
+	print('hi')
 	V_raw = tif.imread(f'{path_to_raw}{timeval}.tif')
 	try:
 		file_path_to_nuclear_seg = f'{path_to_nuclear_seg}{timeval}_ch_1_seg.tif'
@@ -99,10 +113,11 @@ for timeval in timevect:
 
 	
 	unique_labels = [int(i.split('_')[1]) for i in list(G.nodes) if int(i.split('_')[0]) == timeval]
+	print('len')
 
 
 	for i in unique_labels:
-
+		print(i)
 		if i == 0:
 			continue
 		nucleus = np.where(Vnuclear_1 == i)
@@ -123,7 +138,6 @@ for timeval in timevect:
 		
 		volume = np.sum(Vnuclear_1 == i)
 
-
 		nuclear_volume_vect[findnodeval] = volume
 
 		mask = createCircularMask(Vnuclear_1.shape, [mean_Z, mean_Y, mean_X], nuclear_radius_val)
@@ -135,13 +149,14 @@ for timeval in timevect:
 				
 try:
 	in_graph_file = []
-	with open(f'/mnt/home/{user}/ceph/tracked_embryos/{movie}/csvs/volume_graph.csv', newline='') as file:
+	with open(f'/mnt/home/{user}/ceph/tracked_embryos/{movie}/csvs/graph.csv', newline='') as file:
 		csvfile = csv.reader(file)
 		for lines in csvfile:
 			#print(f'adding {lines} to it')
 			in_graph_file.append(lines)
 
-	with open(f'/mnt/home/{user}/ceph/tracked_embryos/{movie}/csvs/volume_graph.csv', 'a') as csv_file:
+
+	with open(f'/mnt/home/{user}/ceph/tracked_embryos/{movie}/csvs/graph.csv', 'a') as csv_file:
 		for i in range(0, len(list(G.nodes))):
 			
 			if [f'{list(G.nodes)[i]}',f'{nuclear_intensity_vect[i]}',f'{nuclear_volume_vect[i]}'] in in_graph_file:
@@ -161,10 +176,9 @@ try:
 				
 	csv_file.close()
 except:
-	print('darn')
 	pass
 	
-	with open(f'/mnt/home/{user}/ceph/tracked_embryos/{movie}/csvs/volume_graph.csv', 'w') as csv_file:
+	with open(f'/mnt/home/{user}/ceph/tracked_embryos/{movie}/csvs/graph.csv', 'w') as csv_file:
 		for i in range(0, len(list(G.nodes))):
 			#print('ji')
 			csv_file.write(list(G.nodes)[i])
@@ -179,12 +193,12 @@ except:
 
 try:
 	in_edge_file = []
-	with open(f'/mnt/home/{user}/ceph/tracked_embryos/{movie}/csvs/volume_edges.csv', newline='') as file:
+	with open(f'/mnt/home/{user}/ceph/tracked_embryos/{movie}/csvs/edges.csv', newline='') as file:
 		csvfile = csv.reader(file)
 		for lines in csvfile:
 			print(f'adding {lines} to it')
 			in_edge_file.append(lines)
-	with open(f'/mnt/home/{user}/ceph/tracked_embryos/{movie}/csvs/volume_edges.csv', 'a') as csv_file:
+	with open(f'/mnt/home/{user}/ceph/tracked_embryos/{movie}/csvs/edges.csv', 'a') as csv_file:
 		for i in range(0, len(list(G.edges))):
 			
 			if [f'{list(G.edges)[i][0]}',f'{list(G.edges)[i][1]}'] in in_edge_file:
@@ -201,7 +215,7 @@ try:
 				#pass
 except:
 	print('doesnt exist')
-	with open(f'/mnt/home/{user}/ceph/tracked_embryos/{movie}/csvs/volume_edges.csv', 'w') as csv_file:
+	with open(f'/mnt/home/{user}/ceph/tracked_embryos/{movie}/csvs/edges.csv', 'w') as csv_file:
 		for i in range(0, len(list(G.edges))):
 			csv_file.write(list(G.edges)[i][0])
 			csv_file.write(',')
