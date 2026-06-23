@@ -214,7 +214,7 @@ for nucleus in props_early:
 		continue
 	if f'{tp_early:03}_{nucleus.label:0{early_buffer}}' in only_these_nuclei:
 		if f'{tp_early:03}_{nucleus.label:0{early_buffer}}' in highlight:
-			print('hi')
+			#print('hi')
 			#print(nucleus.centroid[2])
 			x=np.append(x, nucleus.centroid[2])
 			y=np.append(y,nucleus.centroid[1])
@@ -317,7 +317,7 @@ for edge in edges_to_show:
 		y_edges = np.array([y[ind_early][0], y[ind_late][0]])
 		z_edges = np.array([z[ind_early][0], z[ind_late][0]])
 		edges_names = np.array([[name[ind_early].item(),name[ind_late].item()]])
-		print(edges_names.shape)
+		#print(edges_names.shape)
 		
 	
 	edge_line, = ax.plot(x_edges[counter], y_edges[counter],z_edges[counter], color = 'white')
@@ -377,7 +377,7 @@ def on_click(event):
 			click_idx.append(idx1)
 			print('adding click')
 		else:
-			print('no_clicks')
+			print('nothing selected')
 			click_idx.clear()
 			clicks.clear()
 		if len(clicks) == 2:
@@ -398,13 +398,13 @@ def on_click(event):
 				edges_names[edge_idx] = np.nan
 				edge_lines[edge_idx].remove()
 				deleting_edges.append([early_txt[click_idx[0]].get_text(),early_txt[click_idx[1]].get_text()])
-				print('edge exists')
+				print('deleted edge')
 				
 			else: #Adding Edge
 				
 				print(f'{early_txt[click_idx[0]].get_text()} position is {x[click_idx[0]]},{y[click_idx[0]]},{z[click_idx[0]]}')
 				print(f'{early_txt[click_idx[1]].get_text()} position is {x[click_idx[1]]},{y[click_idx[1]]},{z[click_idx[1]]}')
-				print('edge does not exist')
+				print('added edge')
 				new_edge, = ax.plot([x[click_idx[0]],x[click_idx[1]]], [y[click_idx[0]],y[click_idx[1]]],[z[click_idx[0]],z[click_idx[1]]], color = 'white')
 				edge_lines.append(new_edge)
 				small = [early_txt[click_idx[0]].get_text(),early_txt[click_idx[1]].get_text()]
