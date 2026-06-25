@@ -60,7 +60,7 @@
 2. If you want to delete a connection between 2 nuclei, left click on the 2 nuclei that make the edge
 3. If you want to add a connection, left click on the nuclei you want to connect
 4. If you want to delete a nucleus, right click on it
-5. To save the changes t
+5. To save the changes to the csvs by pressing 'p'
 6. To add a nucleus to the segmentation, open edit_img.py and set the variable 'add_nucleus' to True enter and the zyx coordinates in the 'position' variable
 7. To delete a nucleus from the segmentation, open edit_img.py and set the variable 'delete_nucleus' to True set the 'label' variable to the desired label
 8. To split a nucleus in the segmentation, open edit_img.py and set the variable 'split_nucleus' to True and also set either 'cut_z', 'cut_y', or 'cut_x' to True. Edit either 'cutoffz', 'cutoffy', or 'cutoffx' to the frame you would like the cut to pass through
