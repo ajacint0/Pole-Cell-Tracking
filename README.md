@@ -46,7 +46,6 @@
    - Changing the 'cutoff' variable to, for example, 20, will only highlight tracks that have at least 20 nodes connected through time
    - Changing 'limit_graph' variable to True will show all potential cells and tracks
    - Changing 'important_arr' variable to True will only show tracks that contain specific cells found at a certain timepoint, these cell labels are kept in a .npy file
-   - Changing 'text' variable to False will get rid of labels for the cells in the visualization, might make the visualization smoother
    - Select timepoints to compare with the variables 'tp_early' and 'tp_late', they can be timepoints that are far apart such as 10 and 50
 
 ## Tracking Nuclei
@@ -58,13 +57,15 @@
         - Blue corresponds to nuclei from the later timepoint
              - late nuclei which have lineages that trace back to nuclei in the 'important_arr' variable will be neon green
         - What you will want to do if you have a .npy file of important nuclei is to connect yellow nuclei with no links to blue nuclei, thus turning the blue nuclei green upon reloading the visualization
-2. If you want to delete or make a connection between 2 nuclei, add an entry into edges.csv
-3. If you want to delete a nucleus, you can delete the associated entry in graph.csv
-4. To add a nucleus to the segmentation, open edit_img.py and set the variable 'add_nucleus' to True enter and the zyx coordinates in the 'position' variable
-6. To delete a nucleus from the segmentation, open edit_img.py and set the variable 'delete_nucleus' to True set the 'label' variable to the desired label
-7. To split a nucleus, open edit_img.py and set the variable 'split_nucleus' to True and also set either 'cut_z', 'cut_y', or 'cut_x' to True. Edit either 'cutoffz', 'cutoffy', or 'cutoffx' to the frame you would like the cut to pass through
-8. To combine nuclei, edit_img.py and set the variable combine_nuclei to True and set 'label' to the label the combined nuclei will have. Set 'false_label' to the label that will be merged into the other.
-9. If splitting or adding a nucleus, you will have to add the new label into graph.csv in order for it to show up in the visualization, the same goes for deleting and merging nuclei but instead of adding, you will delete the label from graph.csv
+2. If you want to delete a connection between 2 nuclei, left click on the 2 nuclei that make the edge
+3. If you want to add a connection, left click on the nuclei you want to connect
+4. If you want to delete a nucleus, right click on it
+5. To save the changes t
+6. To add a nucleus to the segmentation, open edit_img.py and set the variable 'add_nucleus' to True enter and the zyx coordinates in the 'position' variable
+7. To delete a nucleus from the segmentation, open edit_img.py and set the variable 'delete_nucleus' to True set the 'label' variable to the desired label
+8. To split a nucleus in the segmentation, open edit_img.py and set the variable 'split_nucleus' to True and also set either 'cut_z', 'cut_y', or 'cut_x' to True. Edit either 'cutoffz', 'cutoffy', or 'cutoffx' to the frame you would like the cut to pass through
+9. To combine nuclei in the segmentation, edit_img.py and set the variable combine_nuclei to True and set 'label' to the label the combined nuclei will have. Set 'false_label' to the label that will be merged into the other.
+10. If splitting or adding a nucleus, you will have to add the new label into graph.csv in order for it to show up in the visualization, the same goes for deleting and merging nuclei but instead of adding, you will delete the label from graph.csv
 
 <img width="1671" height="1670" alt="Screenshot from 2026-06-11 17-54-34" src="https://github.com/user-attachments/assets/56e1a32f-c30e-46bf-b4a5-4526420e219a" />
 ## Visualizing Tree
