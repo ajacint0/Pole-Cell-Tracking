@@ -49,8 +49,8 @@ if important_arr == True:
 	#print(arr)
 
 #Chooses which timepoints are shown on screen, can be far apart like tp_early=4, tp_late=30
-tp_early = 1
-tp_late = 2
+tp_early = 19
+tp_late = 20
 
 
 #split_tp is when I switch from manual segmentation to cellpose segmentation, with cellpose segmentations have thousands of labels, I need to change the naming convention(I should change this to all be 6 characters long, made more sense when manually writing onto csv)
@@ -333,8 +333,7 @@ for edge in edges_to_show:
 	counter = counter + 1
 #print(edges_names.shape)
 #print(x_edges.shape)
-#print(edges_names[4])
-
+print(edges_names)
 
 
 ax.set_facecolor('purple')
@@ -400,21 +399,27 @@ def on_click(event):
 				return()
 			
 			#print(int(clicks[0].get_text()[:3]))
-			#print(int(clicks[1].get_text()[:3]))
+			print(clicks)
 			if np.any(np.all(edges_names == clicks, axis=1)): #Deleting Edge
 				edge_idx = np.where(np.all(edges_names == clicks, axis=1))[0][0]
 				edges_names[edge_idx] = np.nan
-				edge_lines[edge_idx].remove()
+				edge_lines[edge_idx].set_visible(False)
 				deleting_edges.append([early_txt[click_idx[0]].get_text(),early_txt[click_idx[1]].get_text()])
 				print('edge exists')
 				
 			else: #Adding Edge
+				print(clicks)
 				
-				print(f'{early_txt[click_idx[0]].get_text()} position is {x[click_idx[0]]},{y[click_idx[0]]},{z[click_idx[0]]}')
-				print(f'{early_txt[click_idx[1]].get_text()} position is {x[click_idx[1]]},{y[click_idx[1]]},{z[click_idx[1]]}')
-				print('edge does not exist')
-				new_edge, = ax.plot([x[click_idx[0]],x[click_idx[1]]], [y[click_idx[0]],y[click_idx[1]]],[z[click_idx[0]],z[click_idx[1]]], color = 'white')
-				edge_lines.append(new_edge)
+				try:
+					edge_idx = np.where(np.all(edges_names == clicks, axis=1))[0][0]
+					edges_names[edge_idx] = clicks[0]
+					edge_lines[edge_idx].set_visible(True)
+				except:
+					print(f'{early_txt[click_idx[0]].get_text()} position is {x[click_idx[0]]},{y[click_idx[0]]},{z[click_idx[0]]}')
+					print(f'{early_txt[click_idx[1]].get_text()} position is {x[click_idx[1]]},{y[click_idx[1]]},{z[click_idx[1]]}')
+					print('edge does not exist')
+					new_edge, = ax.plot([x[click_idx[0]],x[click_idx[1]]], [y[click_idx[0]],y[click_idx[1]]],[z[click_idx[0]],z[click_idx[1]]], color = 'white')
+					edge_lines.append(new_edge)
 				small = [early_txt[click_idx[0]].get_text(),early_txt[click_idx[1]].get_text()]
 				print(small)
 				edges_names = np.vstack((edges_names, small))
@@ -487,7 +492,7 @@ def on_key(event):
 			for row in reader:
 				if row[0] not in idx_stack_new:
 					new_graph.append(row)
-		with open(f'/mnt/home/ceph/tracked_embryos/{movie}/csvs/graph.csv', 'w', newline='') as f:
+		with open(f'/mnt/home/ajacinto/ceph/tracked_embryos/{movie}/csvs/graph.csv', 'w', newline='') as f:
 			csv.writer(f).writerows(new_graph)
 		print('saved deleting nuclei')
 
@@ -520,7 +525,6 @@ def update_projection():
 
 fig.canvas.mpl_connect('draw_event', lambda event: update_projection())
 plt.show()
-
 
 
 
