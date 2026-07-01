@@ -15,16 +15,16 @@ from register_volumes import register_volumes
 from mpl_toolkits.mplot3d import proj3d
 import sys
 
-user = 'hnunley'
-movie = '2025-07-11_121341'
+user = 'ajacinto'
+movie = '2025-07-09_142109'
 
 register = False
-split_tp = 24
+split_tp = 0
 G = nx.Graph()
 cutoff = 0
 limit_graph = True
 
-important_arr = False
+important_arr = True
 highlight = []
 text = True
 
@@ -38,19 +38,15 @@ path_to_membrane_seg = f'/mnt/home/{user}/ceph/tracked_embryos/{movie}/cellpose/
 
 # Loads nuclei that will go in lineage tree
 if important_arr == True:
-	maybe_arr = np.load(f'/mnt/home/{user}/ceph/tracked_embryos/{movie}/important_nuclei/tp_6_maybe.npy')
-	for_sure_arr = np.load(f'/mnt/home/{user}/ceph/tracked_embryos/{movie}/important_nuclei/tp_6_for_sure.npy')
-	
-	arr = []
-	for i in maybe_arr:
-		arr.append(i)
-	for i in for_sure_arr:
-		arr.append(i)
-	#print(arr)
+	#maybe_arr = np.load('/Users/sophie/Documents/tracked_embryos/important_nuclei/tp_6_maybe.npy')
+        hayden_arr = np.load('/Users/sophie/Documents/tracked_embryos/tp_25_embryo_2025_07_11_121341.npy')
+        arr = []
+        for num in hayden_arr:
+                arr.append(f'025_{num:0{6}}')
 
 #Chooses which timepoints are shown on screen, can be far apart like tp_early=4, tp_late=30
-tp_early = 19
-tp_late = 20
+tp_early = 67
+tp_late = 68
 
 
 #split_tp is when I switch from manual segmentation to cellpose segmentation, with cellpose segmentations have thousands of labels, I need to change the naming convention(I should change this to all be 6 characters long, made more sense when manually writing onto csv)
@@ -69,7 +65,7 @@ end_edge = []
 
 
 #Adds nodes and edges to graph
-with open(f'/mnt/home/ajacinto/ceph/tracked_embryos/{movie}/csvs/edges.csv', newline='') as file:
+with open(f'/mnt/home/{user}/ceph/tracked_embryos/{movie}/csvs/test/edges.csv', newline='') as file:
 	csvfile = csv.reader(file)
 	data = list(csvfile)
 	for lines in data:
@@ -79,7 +75,7 @@ with open(f'/mnt/home/ajacinto/ceph/tracked_embryos/{movie}/csvs/edges.csv', new
 only_these_nuclei = []
 
 #Adds nodes with no edges
-with open(f'/mnt/home/ajacinto/ceph/tracked_embryos/{movie}/csvs/graph.csv', newline='') as file:
+with open(f'/mnt/home/{user}/ceph/tracked_embryos/{movie}/csvs/test/graph.csv', newline='') as file:
 		csvfile = csv.reader(file)
 		for lines in csvfile:
 			G.add_node(lines[0])
@@ -88,7 +84,7 @@ with open(f'/mnt/home/ajacinto/ceph/tracked_embryos/{movie}/csvs/graph.csv', new
 #If false, shows every segmentation that is large enough in size
 if limit_graph == False:
 
-	with open(f'/mnt/home/ajacinto/ceph/tracked_embryos/{movie}/csvs/graph.csv', newline='') as file:
+	with open(f'/mnt/home/{user}/ceph/tracked_embryos/{movie}/csvs/test/graph.csv', newline='') as file:
 		csvfile = csv.reader(file)
 		for lines in csvfile:
 			if f'{tp_early:03}' in (lines[0])[:3]:
@@ -150,7 +146,7 @@ else:
 			end_edge.append(node)
 
 #Reads in the sementations
-print(highlight)
+#print(highlight)
 try:
 	file_path_to_nuclear_seg_early = f'{path_to_nuclear_seg}{tp_early}_ch_1_seg.tif'
 	nuclear_seg_early = tif.imread(file_path_to_nuclear_seg_early)
@@ -176,7 +172,7 @@ except FileNotFoundError:
 
 #If true, the window that show's the graph will have the centroids registered (they were already registered when doing IOU calculations to make the initial edges)
 if register == True:
-	matrix = np.load(f'/mnt/home/ajacinto/ceph/tracked_embryos/{movie}/transformations/tp_{tp_early}_transformation.npy')
+	matrix = np.load(f'/mnt/home/{user}/ceph/tracked_embryos/{movie}/transformations/tp_{tp_early}_transformation.npy')
 	nuclear_seg_early = register_volumes(movie, tp_early, nuclear_seg_early, nuclear_seg_late, matrix)
 
 props_early = regionprops(nuclear_seg_early)
@@ -214,7 +210,7 @@ for nucleus in props_early:
 		continue
 	if f'{tp_early:03}_{nucleus.label:0{early_buffer}}' in only_these_nuclei:
 		if f'{tp_early:03}_{nucleus.label:0{early_buffer}}' in highlight:
-			#print('hi')
+			print('hi')
 			#print(nucleus.centroid[2])
 			x=np.append(x, nucleus.centroid[2])
 			y=np.append(y,nucleus.centroid[1])
@@ -309,31 +305,31 @@ y_edges = np.empty((0,2))
 z_edges = np.empty((0,2))
 edges_names = np.empty((0,2),  dtype=object)
 
-
-
 for edge in edges_to_show:
 	ind_early = np.where(name == edge[0])	
 	ind_late = np.where(name == edge[1])
+	#print(np.array([x[ind_early][0], x[ind_late][0]]))
 	
-
 	row_x = np.array([[x[ind_early][0], x[ind_late][0]]])
 	row_y = np.array([[y[ind_early][0], y[ind_late][0]]])
 	row_z = np.array([[z[ind_early][0], z[ind_late][0]]])
 
-	x_edges = np.vstack((x_edges, np.array([x[ind_early][0], x[ind_late][0]])))
-	y_edges = np.vstack((y_edges, np.array([y[ind_early][0], y[ind_late][0]])))
-	z_edges = np.vstack((z_edges, np.array([z[ind_early][0], z[ind_late][0]])))
+
+
+	x_edges = np.vstack((x_edges, row_x))
+	y_edges = np.vstack((y_edges, row_y))
+	z_edges = np.vstack((z_edges, row_z))
 	edges_names = np.vstack((edges_names, np.array([[name[ind_early].item(),name[ind_late].item()]])))
 	
 		
-	#print()
+	
 	edge_line, = ax.plot(x_edges[-1], y_edges[-1],z_edges[-1], color = 'white')
-	#print(edge_line)
 	edge_lines.append(edge_line)
-	counter = counter + 1
+	#counter = counter + 1
 #print(edges_names.shape)
 #print(x_edges.shape)
-print(edges_names)
+#print(edges_names[4])
+
 
 
 ax.set_facecolor('purple')
@@ -399,27 +395,21 @@ def on_click(event):
 				return()
 			
 			#print(int(clicks[0].get_text()[:3]))
-			print(clicks)
+			#print(int(clicks[1].get_text()[:3]))
 			if np.any(np.all(edges_names == clicks, axis=1)): #Deleting Edge
 				edge_idx = np.where(np.all(edges_names == clicks, axis=1))[0][0]
 				edges_names[edge_idx] = np.nan
-				edge_lines[edge_idx].set_visible(False)
+				edge_lines[edge_idx].remove()
 				deleting_edges.append([early_txt[click_idx[0]].get_text(),early_txt[click_idx[1]].get_text()])
 				print('edge exists')
 				
 			else: #Adding Edge
-				print(clicks)
 				
-				try:
-					edge_idx = np.where(np.all(edges_names == clicks, axis=1))[0][0]
-					edges_names[edge_idx] = clicks[0]
-					edge_lines[edge_idx].set_visible(True)
-				except:
-					print(f'{early_txt[click_idx[0]].get_text()} position is {x[click_idx[0]]},{y[click_idx[0]]},{z[click_idx[0]]}')
-					print(f'{early_txt[click_idx[1]].get_text()} position is {x[click_idx[1]]},{y[click_idx[1]]},{z[click_idx[1]]}')
-					print('edge does not exist')
-					new_edge, = ax.plot([x[click_idx[0]],x[click_idx[1]]], [y[click_idx[0]],y[click_idx[1]]],[z[click_idx[0]],z[click_idx[1]]], color = 'white')
-					edge_lines.append(new_edge)
+				print(f'{early_txt[click_idx[0]].get_text()} position is {x[click_idx[0]]},{y[click_idx[0]]},{z[click_idx[0]]}')
+				print(f'{early_txt[click_idx[1]].get_text()} position is {x[click_idx[1]]},{y[click_idx[1]]},{z[click_idx[1]]}')
+				print('edge does not exist')
+				new_edge, = ax.plot([x[click_idx[0]],x[click_idx[1]]], [y[click_idx[0]],y[click_idx[1]]],[z[click_idx[0]],z[click_idx[1]]], color = 'white')
+				edge_lines.append(new_edge)
 				small = [early_txt[click_idx[0]].get_text(),early_txt[click_idx[1]].get_text()]
 				print(small)
 				edges_names = np.vstack((edges_names, small))
@@ -469,30 +459,30 @@ def on_key(event):
 			print(f'adding: {adding_edges}')
 			print(f'deleting: {deleting_edges}')
 
-		with open(f'/mnt/home/ajacinto/ceph/tracked_embryos/{movie}/csvs/edges.csv', 'a', newline='') as f:
+		with open(f'/mnt/home/{user}/ceph/tracked_embryos/{movie}/csvs/test/edges.csv', 'a', newline='') as f:
 			writer = csv.writer(f)
 			writer.writerows(adding_edges)
 		print('saved adding edges')
 		adding_edges.clear()
 		new_csv = []
-		with open(f'/mnt/home/ajacinto/ceph/tracked_embryos/{movie}/csvs/edges.csv', 'r', newline='') as f:
+		with open(f'/mnt/home/{user}/ceph/tracked_embryos/{movie}/csvs/test/edges.csv', 'r', newline='') as f:
 			reader = csv.reader(f)
 			for row in reader:
 				if row not in deleting_edges:
 					new_csv.append(row)
-		with open(f'/mnt/home/ajacinto/ceph/tracked_embryos/{movie}/csvs/edges.csv', 'w', newline='') as f:
+		with open(f'/mnt/home/{user}/ceph/tracked_embryos/{movie}/csvs/test/edges.csv', 'w', newline='') as f:
 			csv.writer(f).writerows(new_csv)
 		deleting_edges.clear()
 		print('saved deleting edges')
 		new_graph = []
 		idx_stack_new = [early_txt[x].get_text() for x in idx_stack]
 		print(f'deleting: {idx_stack_new}')
-		with open(f'/mnt/home/ajacinto/ceph/tracked_embryos/{movie}/csvs/graph.csv', 'r', newline='') as f:
+		with open(f'/mnt/home/{user}/ceph/tracked_embryos/{movie}/csvs/test/graph.csv', 'r', newline='') as f:
 			reader = csv.reader(f)
 			for row in reader:
 				if row[0] not in idx_stack_new:
 					new_graph.append(row)
-		with open(f'/mnt/home/ajacinto/ceph/tracked_embryos/{movie}/csvs/graph.csv', 'w', newline='') as f:
+		with open(f'/mnt/home/{user}/ceph/tracked_embryos/{movie}/csvs/test/graph.csv', 'w', newline='') as f:
 			csv.writer(f).writerows(new_graph)
 		print('saved deleting nuclei')
 
@@ -525,17 +515,3 @@ def update_projection():
 
 fig.canvas.mpl_connect('draw_event', lambda event: update_projection())
 plt.show()
-
-
-
-
-	
-	
-
-
-
-
-
-
-
-
