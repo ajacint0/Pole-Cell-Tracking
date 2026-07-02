@@ -65,6 +65,7 @@ for i in timevect:
 time_vals_vect = np.zeros_like(G.nodes)
 labels_vals_vect = np.zeros_like(G.nodes)
 
+# makes labels for each vertex/cell
 
 for i in range(0, len(G.nodes)):
 	nodename = list(G.nodes)[i]
@@ -75,6 +76,9 @@ for i in range(0, len(G.nodes)):
 nuclear_intensity_vect = np.zeros_like(G.nodes)
 nuclear_volume_vect = np.zeros_like(G.nodes)
 nuclear_radius_val = 6
+
+# reads either gui segmentations or cellpose segmentations
+
 for timeval in timevect:
 
 	V_raw = tif.imread(f'{path_to_raw}{timeval}.tif')
@@ -95,7 +99,8 @@ for timeval in timevect:
 	unique_labels = [int(i.split('_')[1]) for i in list(G.nodes) if int(i.split('_')[0]) == timeval]
 	print('len')
 
-
+	# gets nucleus coordinates for graph labels in order to get volume and intensity values
+	
 	for i in unique_labels:
 		print(i)
 		if i == 0:
@@ -125,7 +130,7 @@ for timeval in timevect:
 		nuclear_intensity_vect[findnodeval] = np.mean(V_raw[mask])
 
 		
-		
+# checks if csvs exist, if they do, append, if not, write	
 				
 try:
 	in_graph_file = []
