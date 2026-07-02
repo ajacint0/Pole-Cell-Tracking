@@ -149,7 +149,6 @@ try:
 				csv_file.write(',')
 				csv_file.write(nuclear_volume_vect[i])
 				csv_file.write('\n')
-				#pass
 				
 	csv_file.close()
 except:
@@ -157,14 +156,12 @@ except:
 	
 	with open(f'/mnt/home/{user}/ceph/tracked_embryos/{movie}/csvs/test/graph.csv', 'w') as csv_file:
 		for i in range(0, len(list(G.nodes))):
-			#print('ji')
 			csv_file.write(list(G.nodes)[i])
 			csv_file.write(',')
 			csv_file.write(nuclear_intensity_vect[i])
 			csv_file.write(',')
 			csv_file.write(nuclear_volume_vect[i])
 			csv_file.write('\n')
-			#pass
 	csv_file.close()
 
 
@@ -182,14 +179,12 @@ try:
 			
 				print(f'{list(G.edges)[i][0]},{list(G.edges)[i][1]} is in the file')
 				continue
-				#continue
 			else:
 				print(f'{list(G.edges)[i][0]},{list(G.edges)[i][1]} is NOT in the file')
 				csv_file.write(list(G.edges)[i][0])
 				csv_file.write(',')
 				csv_file.write(list(G.edges)[i][1])
 				csv_file.write('\n')
-				#pass
 except:
 	print('doesnt exist')
 	with open(f'/mnt/home/{user}/ceph/tracked_embryos/{movie}/csvs/test/edges.csv', 'w') as csv_file:
